@@ -1,0 +1,48 @@
+h1. What's GoogleAnalyticsProxy?
+
+This class allows you to test event tracking in a development environment without throwing JavaScript errors because google analytics isn't loaded. When Google Analytics is loaded, it'll trigger the corresponding pageTracker functions as you'd expect in a production environment.
+
+h2. Example Usage
+
+Just execute this _after_ google analytics is loaded.
+
+  _gap = new GoogleAnalyticsProxy();
+
+  _gap._trackPageview();
+  _gap._trackPageview('/contact/thanks');
+  _gap._trackEvent('Video', 'Play', 'Homepage video');
+  _gap._trackEvent('Video', 'Pause', 'Homepage video');
+  _gap._trackEvent('Button', 'Click', 'Call to action X');
+
+
+h3. Initializing GoogleAnalyticsProxy
+
+The following example is for Ruby on Rails to demonstrate how I load google analytics only in production, but GoogleAnalyticsProxy is loaded all the time.
+
+<pre><code>
+<% if RAILS_ENV == 'production' -%>
+  <!--// Google Analytics //-->
+  <script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+  var pageTracker = _gat._getTracker("UA-XXXXXX-1");
+  pageTracker._trackPageview();
+  </script>
+<% end -%>
+
+<script type="text/javascript">
+  var _gap = new GoogleAnalyticsProxy();
+</script>
+</code></pre>
+
+h2. Distribution
+
+All the files related to GoogleAnalyticsProxy can be found in the @src@ folder.
+
+h2. More information
+
+You can learn morea bout the Google Analytics API here:
+
+* "http://code.google.com/apis/analytics/docs/gaJS/gaJSApi.html":http://code.google.com/apis/analytics/docs/gaJS/gaJSApi.html
