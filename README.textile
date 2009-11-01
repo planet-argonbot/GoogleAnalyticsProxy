@@ -6,6 +6,7 @@ h2. Example Usage
 
 Just execute this _after_ google analytics is loaded.
 
+<pre><code>
   _gap = new GoogleAnalyticsProxy();
 
   _gap._trackPageview();
@@ -13,7 +14,7 @@ Just execute this _after_ google analytics is loaded.
   _gap._trackEvent('Video', 'Play', 'Homepage video');
   _gap._trackEvent('Video', 'Pause', 'Homepage video');
   _gap._trackEvent('Button', 'Click', 'Call to action X');
-
+</code></pre>
 
 h3. Initializing GoogleAnalyticsProxy
 
