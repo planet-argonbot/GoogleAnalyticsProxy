@@ -26,41 +26,40 @@
 // Google Analytics API
 //  http://code.google.com/apis/analytics/docs/gaJS/gaJSApi.html
 
-var GoogleAnalyticsProxy = Class.create();
-
-GoogleAnalyticsProxy.prototype = {
-  initialize: function() {
-    this.googleAnalyticsEnabled = this.checkForGoogleAnalytics();
-  },
-
-  checkForGoogleAnalytics: function() {
-    return(typeof(window['_gat']) == "undefined" ? false : true);
+var GoogleAnalyticsProxy = {
+  
+  googleAnalyticsVariableName: '_gaq',
+  
+  googleAnalyticsEnabled: function() {
+    return(typeof(window[this.googleAnalyticsVariableName]) == "undefined" ? false : true);
   },
 
   log: function(message) {
-    console.log('[GoogleAnalyticsProxy] ' + message + ' was triggered');
+    if (typeof console !== "undefined" && console !== null) {
+      console.log('[GoogleAnalyticsProxy] ' + message + ' was triggered');
+    }
   },
 
   // Proxy for pageTracker, which is defined in the provided Google Analytics snippet
   pageTracker: function(value) {
-    return window['pageTracker'];
+    return window[this.googleAnalyticsVariableName];
   },
 
   // _trackPageview()
   // API: http://code.google.com/apis/analytics/docs/gaJS/gaJSApiBasicConfiguration.html#_gat.GA_Tracker_._trackPageview
   _trackPageview: function(opt_pageURL) {
-    if (this.googleAnalyticsEnabled) {
-      this.pageTracker()._trackPageview(opt_pageURL);
+    if (this.googleAnalyticsEnabled()) {
+      this.pageTracker().push(['_trackPageview', opt_pageURL]);
     } else {
-      this.log('_pageTracker(' + opt_pageURL + ')');
+      this.log('_trackPageview(' + opt_pageURL + ')');
     }
   },
 
   // _trackEvent()
   //  API: http://code.google.com/apis/analytics/docs/gaJS/gaJSApiEventTracking.html#_gat.GA_EventTracker_._trackEvent
   _trackEvent: function(category, action, opt_label, opt_value) {
-    if (this.googleAnalyticsEnabled) {
-      this.pageTracker()._trackEvent(category, action, opt_label, opt_value);
+    if (this.googleAnalyticsEnabled()) {
+      this.pageTracker().push(['_trackEvent', category, action, opt_label, opt_value]);
     } else {
       this.log('_trackEvent(' + category + ', ' + action + ', ' + opt_label + ', ' + opt_value + ')');
     }
